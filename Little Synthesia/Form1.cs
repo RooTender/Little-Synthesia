@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Media;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Little_Synthesia
@@ -52,6 +53,7 @@ namespace Little_Synthesia
             MessageBox.Show("To start typing the music notes you have to use your computer keyboard.\nSo make sure you've got one there (Especially kashubian keyboard).", "The Instruction 1/3", MessageBoxButtons.OK, MessageBoxIcon.Information);
             MessageBox.Show("Real piano keys are associated with these on your keyboard. The structure of them is also really similar.\n\nWhite keys are from Z to M.\nBlack keys are: S, D, G, H, J.", "The Instruction 2/3", MessageBoxButtons.OK, MessageBoxIcon.Information);
             MessageBox.Show("It looks quite complicated for now, but soon or later you'll find it's dope. Don't get frustrated too easily and remember to have fun ;)", "The Instruction 3/3", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            System.Diagnostics.Process.Start(rootPath + "keyboard.png");
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -84,7 +86,47 @@ namespace Little_Synthesia
 
         private void playMySongToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Z.Play();
+            if (textBox1.Text == "") return;
+
+            for (int i = 0; i < textBox1.Text.Length; i++)
+            {
+                playSoundOnKey(textBox1.Text[i].ToString());
+                Thread.Sleep(500);
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(textBox1.Text == "") 
+            {
+                MessageBox.Show("There is no song!");
+                return;
+            }
+
+            SaveFileDialog SFD = new SaveFileDialog();
+            SFD.Filter = "Little Synthesia Files (.ls)|*.ls";
+
+            if(SFD.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllText(SFD.FileName, textBox1.Text);
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text != "")
+            {
+                MessageBox.Show("Are you sure you want to overwrite your song?", "Overwrite choice", MessageBoxButtons.YesNo);
+                if(DialogResult == DialogResult.No) return;
+            }
+
+            OpenFileDialog OFD = new OpenFileDialog();
+            OFD.Filter = "Little Synthesia Files (.ls)|*.ls";
+
+            if(OFD.ShowDialog() == DialogResult.OK)
+            {
+                textBox1.Text = File.ReadAllText(OFD.FileName);
+            }
         }
     }
 }

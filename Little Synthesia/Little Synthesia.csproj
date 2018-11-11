@@ -91,6 +91,7 @@
     <Content Include="Notes\f3.mp3" />
     <Content Include="Notes\g-3.mp3" />
     <Content Include="Notes\g3.mp3" />
+    <Content Include="Notes\Keyboard.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
